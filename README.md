@@ -60,7 +60,10 @@ Opening `index.html` directly in a browser also works, with two exceptions: the 
 ├── robots.txt                  Allows all crawlers, points to the sitemap
 ├── sitemap.xml                 Generated automatically (see SEO section)
 ├── assets/
-│   ├── poster.png              Official artwork (hero + share image)
+│   ├── poster.png              Official artwork (homepage hero, structured data)
+│   ├── og-cover.jpg            1200x630 share image (homepage)
+│   ├── og-partners.jpg         1200x630 share image (partners page)
+│   ├── og-fans.jpg             1200x630 share image (fan access page)
 │   ├── highlanders-logo.svg    Club crest (nav, logo rows)
 │   ├── junza-studios-logo.webp Studio logo
 │   ├── theme-song.mp3          "TSHILA" by Boy Nino (floating player)
@@ -267,7 +270,8 @@ Five PDFs live in `assets/` and are linked from the Downloads sections.
 |---|---|
 | `assets/carousel/` | Pre-designed slide graphics (text is baked into the images, so editing the words means re-exporting the image). Referenced from `partners.html` and `fan-access.html`. |
 | `assets/popups/` | Community photos used by the homepage gallery with lightbox. `pop-07.jpg` is currently an unused spare. |
-| `assets/poster.png` | Used in the hero and as the social share image. Keep it at a size that works for link previews. |
+| `assets/poster.png` | Used in the homepage hero. Transparent PNG, so it is not used as the share image. |
+| `assets/og-cover.jpg`, `og-partners.jpg`, `og-fans.jpg` | Share images (1200 × 630), one per page. Built from the poster on a cream background with a page-specific headline baked into the image. Re-make them if the artwork or wording changes. |
 | `assets/theme-song.mp3` | About 4.4 MB. It is the heaviest asset, which is why it only loads on click. |
 
 **Adding a community photo:**
@@ -283,7 +287,10 @@ Five PDFs live in `assets/` and are linked from the Downloads sections.
 ## SEO, sharing and sitemap
 
 - Every page has a `<title>`, meta description, canonical URL, Open Graph tags and Twitter card tags. The homepage also includes `Movie` structured data (schema.org JSON-LD).
-- Share image for all pages: `assets/poster.png`.
+- **Share images (1200 × 630 px, about 110–120 KB each, JPEG on a solid background):** `assets/og-cover.jpg` for the homepage, `assets/og-partners.jpg` for `partners.html`, and `assets/og-fans.jpg` for `fan-access.html`. Do not point share tags at `assets/poster.png`: it is a transparent PNG with an irregular cut-out edge and previews badly on WhatsApp and Facebook.
+- Each page also sets `fb:app_id` (Meta developer App ID `2185126568423398`), which clears the Facebook Sharing Debugger's "Missing Properties" warning.
+- Each page also sets `og:image:width/height/type/alt`, `twitter:description` and `twitter:image:alt`, with its own page-specific description.
+- **After any change to the share image or share text**, Facebook and WhatsApp keep the old preview in cache. Open the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/), paste the page URL and press **Scrape Again**. Do this for each page. WhatsApp reads from the same cache, so refreshing there fixes WhatsApp too. If you replace the image, give the file a new name (for example `og-cover-v2.jpg`) and update the three pages, which forces a fresh fetch.
 - `robots.txt` allows all crawling.
 - **`sitemap.xml` is generated automatically** by the GitHub Action in `.github/workflows/sitemap.yml` on every push to `main`, and committed back. Don't hand-edit it.
 - When adding a new page, add the same head block as the existing pages (title, description, canonical, Open Graph, Twitter, favicons, stylesheet) and link the page from the nav in all pages.
